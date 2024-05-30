@@ -2,14 +2,13 @@ import streamlit as st
 from PIL import Image
 import pickle
 import numpy as np
-import sklearn
 
 # Load the model
 model = pickle.load(open('./Model/ML_Model.pkl', 'rb'))
 
 def run():
     img1 = Image.open('bank.png')
-    img1 = img1.resize((156,145))
+    img1 = img1.resize((156, 145))
     st.image(img1, use_column_width=False)
     st.title("Bank Loan Prediction using Machine Learning")
 
@@ -55,17 +54,17 @@ def run():
     cred = st.selectbox("Credit Score", cred_options, format_func=lambda x: cred_display[x])
 
     # Applicant Monthly Income
-    mon_income = st.number_input("Applicant's Monthly Income($)", value=0, min_value=0)
+    mon_income = st.number_input("Applicant's Monthly Income($)", value=0, min_value=0, step=1)
 
     # Co-Applicant Monthly Income
-    co_mon_income = st.number_input("Co-Applicant's Monthly Income($)", value=0, min_value=0)
+    co_mon_income = st.number_input("Co-Applicant's Monthly Income($)", value=0, min_value=0, step=1)
 
     # Loan Amount
-    loan_amt = st.number_input("Loan Amount", value=0, min_value=0)
+    loan_amt = st.number_input("Loan Amount", value=0, min_value=0, step=1)
 
     # Loan Duration
     dur_display = ['2 Month', '6 Month', '8 Month', '1 Year', '16 Month']
-    dur_options = range(len(dur_display))
+    dur_options = list(range(len(dur_display)))
     dur = st.selectbox("Loan Duration", dur_options, format_func=lambda x: dur_display[x])
 
     # Convert duration to days
@@ -74,7 +73,8 @@ def run():
 
     if st.button("Submit"):
         try:
-            features = [[gen, mar, dep, edu, emp, mon_income, co_mon_income, loan_amt, duration, cred, prop]]
+            features = [[gen, mar, dep, edu, emp, int(mon_income), int(co_mon_income), int(loan_amt), duration, cred, prop]]
+            st.write(f"Features: {features}")  # Debug statement
             prediction = model.predict(features)
             ans = int(prediction[0])
             if ans == 0:
