@@ -73,7 +73,20 @@ def run():
 
     if st.button("Submit"):
         try:
-            features = [[gen, mar, dep, edu, emp, int(mon_income), int(co_mon_income), int(loan_amt), duration, cred, prop]]
+            # Ensure all inputs are correctly cast to integers
+            gen = int(gen)
+            mar = int(mar)
+            dep = int(dep)
+            edu = int(edu)
+            emp = int(emp)
+            mon_income = int(mon_income)
+            co_mon_income = int(co_mon_income)
+            loan_amt = int(loan_amt)
+            cred = int(cred)
+            prop = int(prop)
+            duration = int(duration)
+            
+            features = [[gen, mar, dep, edu, emp, mon_income, co_mon_income, loan_amt, duration, cred, prop]]
             st.write(f"Features: {features}")  # Debug statement
             prediction = model.predict(features)
             ans = int(prediction[0])
