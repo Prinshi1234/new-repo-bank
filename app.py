@@ -4,25 +4,40 @@ import pickle
 import numpy as np
 
 
-import logging
+import streamlit as st
+import tornado.web
+import tornado.websocket
+import threading
+import asyncio
 
 class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
-    async def _receive_frame(self):
-        try:
-            # Receive frame
-            await super()._receive_frame()
-        except TypeError as e:
-            logging.error(f"TypeError encountered: {e}")
-            logging.error(f"Data: {self._decompressor}")
-            raise
+    def open(self):
+        self.write_message("WebSocket opened")
 
-    def _handle_message(self, opcode, data):
-        try:
-            data = self._decompressor.decompress(data)
-        except TypeError as e:
-            logging.error(f"TypeError encountered: {e}")
-            logging.error(f"Data: {data}")
-            raise
+    def on_message(self, message):
+        self.write_message(f"You said: {message}")
+
+    def on_close(self):
+        print("WebSocket closed")
+
+def make_app():
+    return tornado.web.Application([
+        (r"/websocket", MyWebSocketHandler),
+    ])
+
+def start_server():
+    app = make_app()
+    app.listen(8888)
+    tornado.ioloop.IOLoop.current().start()
+
+if __name__ == "__main__":
+    # Start the Tornado server in a separate thread
+    threading.Thread(target=start_server, daemon=True).start()
+
+    # Streamlit code goes here
+    st.title("Streamlit App with Tornado WebSocket")
+    st.write("Tornado WebSocket server is running on port 8888")
+
 
 
 
