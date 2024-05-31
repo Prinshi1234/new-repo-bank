@@ -2,9 +2,6 @@ import streamlit as st
 from PIL import Image
 import pickle
 import numpy as np
-
-
-import streamlit as st
 import tornado.web
 import tornado.websocket
 import threading
@@ -27,7 +24,7 @@ def make_app():
 
 def start_server():
     app = make_app()
-    app.listen(8888)
+    app.listen(8888)  # Ensure the port number is an integer
     tornado.ioloop.IOLoop.current().start()
 
 if __name__ == "__main__":
