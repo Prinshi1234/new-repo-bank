@@ -3,6 +3,33 @@ from PIL import Image
 import pickle
 import numpy as np
 
+
+import logging
+
+class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
+    async def _receive_frame(self):
+        try:
+            # Receive frame
+            await super()._receive_frame()
+        except TypeError as e:
+            logging.error(f"TypeError encountered: {e}")
+            logging.error(f"Data: {self._decompressor}")
+            raise
+
+    def _handle_message(self, opcode, data):
+        try:
+            data = self._decompressor.decompress(data)
+        except TypeError as e:
+            logging.error(f"TypeError encountered: {e}")
+            logging.error(f"Data: {data}")
+            raise
+
+
+
+
+
+
+
 # Load the model
 model = pickle.load(open('./Model/ML_Model.pkl', 'rb'))
 
