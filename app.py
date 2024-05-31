@@ -31,9 +31,6 @@ if __name__ == "__main__":
     # Start the Tornado server in a separate thread
     threading.Thread(target=start_server, daemon=True).start()
 
-    # Streamlit code goes here
-    st.title("Streamlit App with Tornado WebSocket")
-    st.write("Tornado WebSocket server is running on port 8888")
 
 
 
