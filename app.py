@@ -6,30 +6,18 @@ import tornado.web
 import tornado.websocket
 import threading
 import asyncio
+# Define a function to handle WebSocket messages
+def handle_message(message):
+    st.write("Received message:", message)
 
-class MyWebSocketHandler(tornado.websocket.WebSocketHandler):
-    def open(self):
-        self.write_message("WebSocket opened")
+def main():
+    st.title("Streamlit App with WebSocket")
 
-    def on_message(self, message):
-        self.write_message(f"You said: {message}")
+    # Display a message to let the user know to open the WebSocket connection
+    st.write("Open WebSocket connection in your browser.")
 
-    def on_close(self):
-        print("WebSocket closed")
-
-def make_app():
-    return tornado.web.Application([
-        (r"/websocket", MyWebSocketHandler),
-    ])
-
-def start_server():
-    app = make_app()
-    app.listen(8888)  # Ensure the port number is an integer
-    tornado.ioloop.IOLoop.current().start()
-
-if __name__ == "__main__":
-    # Start the Tornado server in a separate thread
-    threading.Thread(target=start_server, daemon=True).start()
+    # Get WebSocket data
+    ws = st.websocket("ws://localhost:8888/websocket", on_message=handle_message)
 
 
 
